@@ -1,3 +1,4 @@
+# Attempt python3 style tkinter
 try:
 	from tkinter import *
 	from tkinter.ttk import Frame, Button, Style
@@ -5,6 +6,7 @@ try:
 	import tkinter.filedialog
 	oldVersion = False
 except Exception:
+	# fall back to version 2 libs
 	print("Error. Python 3.x needed. Attempting to use old libs...\n")	
 	from Tkinter import *
 	from ttk import Frame, Button, Style
@@ -83,6 +85,10 @@ class FileMasher(Frame):
 		
 		self.parent.geometry('%dx%d+%d+%d' % (w,h,x,y))
 		
+	"""
+	Action Button Functions
+	"""
+		
 	def selectFiles(self):
 		# Get files to combine - backwards compat
 		if oldVersion:
@@ -92,14 +98,21 @@ class FileMasher(Frame):
 			
 		for f in filez:
 			self.lstFileList.insert(END, f)
+			self.fileExt = os.path.splitext(f)[1] # get the file extension
 		self.fileList = filez
 		
 	def joinFiles(self):
+		# get the default file extension
+		try:
+			self.fileExt
+		except Exception:
+			self.fileExt = ".txt"
+	
 		# set destination
 		if oldVersion:
-			destination = tkFileDialog.asksaveasfile(mode='w+b', defaultextension=".mp3")
+			destination = tkFileDialog.asksaveasfile(mode='w+b', defaultextension=self.fileExt)
 		else:
-			destination = tkinter.filedialog.asksaveasfile(mode='w+b', defaultextension=".mp3")
+			destination = tkinter.filedialog.asksaveasfile(mode='w+b', defaultextension=self.fileExt)
 		if destination is None: #exit if cancelled
 			return
 		
