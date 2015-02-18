@@ -22,7 +22,13 @@ class FileMasher(Frame):
 	def __init__(self, parent):
 		Frame.__init__(self, parent)
 		self.parent = parent
+		self.setClassVariables()
 		self.initUI()
+		
+	# Set "self" variables	
+	def setClassVariables(self):
+		# Default ext for output file
+		self.fileExt = ".txt"
 	
 	def initUI(self):
 		self.parent.title("FileMasher")
@@ -38,9 +44,11 @@ class FileMasher(Frame):
 		self.rowconfigure(6, weight=1)
 		self.rowconfigure(8,pad=7)
 		
+		# scrollbar for the list
 		scrollbar = Scrollbar(self, orient=HORIZONTAL)
 		scrollbar.grid(row=7, column=0, columnspan=2, sticky=E+W)
 		
+		# List of files. This determines the files and order of files to mash
 		self.lstFileList = Listbox(self, xscrollcommand=scrollbar.set, selectmode=EXTENDED)
 		self.lstFileList.grid(row=1,column=0,columnspan=2, rowspan=6, sticky=E+W+S+N)
 		scrollbar.config(command=self.lstFileList.xview)
@@ -66,11 +74,9 @@ class FileMasher(Frame):
 		
 		# Button to create a file and combine selected files into it
 		btnGo = Button(self, text="Mash Files!",command=self.joinFiles)
-		btnGo.grid(row=6, column=3, sticky=E+W+N+S, rowspan=2)
+		btnGo.grid(row=6, column=3, sticky=E+W+N+S, rowspan=1)
 		
-		#btnQuit = Button(self, text="Quit",command=self.quit)
-		#btnQuit.grid(row=8, column=0)
-		
+		# Set window dimensions and center
 		self.centerWindow()
 		
 	def centerWindow(self):
@@ -101,13 +107,7 @@ class FileMasher(Frame):
 			self.fileExt = os.path.splitext(f)[1] # get the file extension
 		self.fileList = filez
 		
-	def joinFiles(self):
-		# get the default file extension
-		try:
-			self.fileExt
-		except Exception:
-			self.fileExt = ".txt"
-	
+	def joinFiles(self):	
 		# set destination
 		if oldVersion:
 			destination = tkFileDialog.asksaveasfile(mode='w+b', defaultextension=self.fileExt)
