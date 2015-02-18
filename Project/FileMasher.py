@@ -3,6 +3,7 @@ try:
 	from tkinter.ttk import Frame, Button, Style
 	import tkinter.messagebox
 	import tkinter.filedialog
+	oldVersion = False
 except Exception:
 	print("Error. Python 3.x needed. Attempting to use old libs...\n")	
 	from Tkinter import *
