@@ -12,12 +12,14 @@ except Exception:
 	from ttk import Frame, Button, Style
 	import tkMessageBox
 	import tkFileDialog
-	
 	oldVersion = True
+	
+# Remaining import statements
 import shutil
 import os
 
 
+# Main class for the program
 class FileMasher(Frame):
 	def __init__(self, parent):
 		Frame.__init__(self, parent)
@@ -127,9 +129,6 @@ class FileMasher(Frame):
 		destination.close()
 		print("\n\nFinished")
 		self.alertBox(msgText="Finished mashing files!", msgTitle="Mashing Completed")
-		
-	def quit(self):
-		self.parent.destroy()
 		
 	# Simple alert message. Destroyed when done.
 	def alertBox(self, msgText, msgTitle="Alert!"):
