@@ -1,7 +1,16 @@
-from tkinter import *
-from tkinter.ttk import Frame, Button, Style
-import tkinter.messagebox
-import tkinter.filedialog
+try:
+	from tkinter import *
+	from tkinter.ttk import Frame, Button, Style
+	import tkinter.messagebox
+	import tkinter.filedialog
+except Exception:
+	print("Error. Python 3.x needed. Attempting to use old libs...\n")	
+	from Tkinter import *
+	from ttk import Frame, Button, Style
+	import tkMessageBox
+	import tkFileDialog
+	
+	oldVersion = True
 import shutil
 import os
 
@@ -74,15 +83,22 @@ class FileMasher(Frame):
 		self.parent.geometry('%dx%d+%d+%d' % (w,h,x,y))
 		
 	def selectFiles(self):
-		# Get files to combine
-		filez = tkinter.filedialog.askopenfilenames(title="Choose files to combine")
+		# Get files to combine - backwards compat
+		if oldVersion:
+			filez = tkFileDialog.askopenfilenames(title="Choose files to combine")
+		else:
+			filez = tkinter.filedialog.askopenfilenames(title="Choose files to combine")
+			
 		for f in filez:
 			self.lstFileList.insert(END, f)
 		self.fileList = filez
 		
 	def joinFiles(self):
 		# set destination
-		destination = tkinter.filedialog.asksaveasfile(mode='w+b', defaultextension=".mp3")
+		if oldVersion:
+			destination = tkFileDialog.asksaveasfile(mode='w+b', defaultextension=".mp3")
+		else:
+			destination = tkinter.filedialog.asksaveasfile(mode='w+b', defaultextension=".mp3")
 		if destination is None: #exit if cancelled
 			return
 		
@@ -105,7 +121,10 @@ class FileMasher(Frame):
 	def alertBox(self, msgText, msgTitle="Alert!"):
 		window = Tk()
 		window.wm_withdraw()
-		tkinter.messagebox.showinfo(title=msgTitle, message=msgText)
+		if oldVersion:
+			tkMessageBox.showinfo(title=msgTitle, message=msgText)
+		else:
+			tkinter.messagebox.showinfo(title=msgTitle, message=msgText)
 		window.destroy()
 		
 	"""
@@ -127,10 +146,11 @@ class FileMasher(Frame):
 		for pos in posList:
 			if pos == 0:
 				continue
+			newPos = int(pos) - 1
 			text = l.get(pos)
 			l.delete(pos)
-			l.insert(pos-1, text)
-			l.selection_set(pos-1)
+			l.insert(newPos, text)
+			l.selection_set(newPos)
 	
 	def moveListItemDown(self):
 		l = self.lstFileList
@@ -141,10 +161,11 @@ class FileMasher(Frame):
 		for pos in reversed(posList):
 			if pos == l.index(END):
 				continue
+			newPos = int(pos) + 1
 			text = l.get(pos)
 			l.delete(pos)
-			l.insert(pos+1, text)
-			l.selection_set(pos+1)
+			l.insert(newPos, text)
+			l.selection_set(newPos)
 		
 def main():
 	root = Tk()
